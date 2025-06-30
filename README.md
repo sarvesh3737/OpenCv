@@ -1,24 +1,23 @@
 # Parking Lot Management System
 
-A robust and extensible command-line application for managing a small parking lot.
+A command-line application for managing a parking lot.
 Users can specify the total number of slots and manage entry, exit, and status of vehicles of various sizes.
 *All data is stored in memory—no database required!*
 
 ---
 
-## 🚗 Features
+## Features
 
 * **User-defined Slots:** Initialize the parking lot with any number of slots.
 * **Slot Size Classification:** Three slot types — Small, Large, Oversize.
 * **Vehicle Management:** Park, unpark, and locate vehicles by license plate.
 * **Duplicate Prevention:** License plates must be unique within the lot.
 * **Real-time Status:** View slot availability for each slot size.
-* **Input Validation & Error Handling:** Handles invalid/duplicate entries gracefully.
-* **Extensible:** Easily add more vehicle or slot types if needed.
+* **Input Validation & Error Handling:** Handles invalid/duplicate entries.
 
 ---
 
-## 🏗️ Approach & Design
+## Approach & Design
 
 ### Object-Oriented Structure
 
@@ -28,14 +27,10 @@ Users can specify the total number of slots and manage entry, exit, and status o
   * `ParkingSpot`: Represents a single slot, tracks its type and occupancy.
   * `Vehicle` (abstract) and its subclasses: `SmallCar`, `LargeCar`, `SUV`, `Truck`.
   * Enums for vehicle/slot types for type-safety and clarity.
-* **Initialization Logic:**
-
-  * User specifies number of slots (`n`).
-  * Slots are divided approximately as: 50% Small, 33% Large, rest Oversize (minimum 1 of each type).
 
 ---
 
-## 🗂️ File Structure
+## File Structure
 
 ```
 parkinglot/
@@ -109,50 +104,62 @@ Vehicle ABC123 parked successfully in spot 6
 
 ---
 
-## 🧪 Test Data
+## 🧪 Test Data & Expected Results
 
-* The application is interactive and does not require pre-loaded data.
-* You can add/remove vehicles via CLI and observe how slots fill up or become available.
-* *(Optional: For automated testing or demonstrations, you can script a series of actions in a Python file.)*
+You can manually test the application interactively. Here is an example test sequence and the expected outcome:
+
+### Test Scenario
+
+1. Initialize with **8 slots**.
+2. Park the following vehicles in order:
+
+   * Small Car, License Plate: `S1`
+   * Small Car, License Plate: `S2`
+   * Large Car, License Plate: `L1`
+   * Large Car, License Plate: `L2`
+   * SUV, License Plate: `O1`
+   * Truck, License Plate: `O2`
+3. Try to park another Small Car with plate `S1` (duplicate) — should be rejected.
+4. Try to park another SUV (should fail if all oversize slots are filled).
+5. Unpark vehicle with license plate `L1`.
+6. Park a new Large Car, License Plate: `L3` (should succeed, since a large slot became available).
+7. Display availability/status at each step for validation.
+
+### Expected Results
+
+* After step 2, all slot types should be either full or partially full depending on distribution.
+* Duplicate parking (`S1`) is not allowed (error message).
+* Trying to park an SUV when oversize slots are full should show a "no slots available" message.
+* After unparking `L1` and parking `L3`, all large slots should be full again.
+
+#### Example Output Snippet
+
+```
+Parking lot initialized with 8 slots:
+  Small slots: 4
+  Large slots: 2
+  Oversize slots: 2
+
+Vehicle S1 parked successfully in spot 0
+Vehicle S2 parked successfully in spot 1
+Vehicle L1 parked successfully in spot 4
+Vehicle L2 parked successfully in spot 5
+Vehicle O1 parked successfully in spot 6
+Vehicle O2 parked successfully in spot 7
+
+Vehicle with license plate S1 is already parked
+No oversize slots available!
+Vehicle L1 unparked successfully
+Vehicle L3 parked successfully in spot 4
+
+=== PARKING LOT STATUS ===
+Small slots: 2/4 available
+Large slots: 0/2 available
+Oversize slots: 0/2 available
+Total vehicles parked: 6
+========================
+```
 
 ---
 
-## 📋 Assumptions & Design Decisions
 
-* At least one slot of each type (Small, Large, Oversize) if possible.
-* Vehicles can only park in slots of matching size (no upgrades/downgrades).
-* License plates must be unique, 3–10 characters, alphanumeric.
-* All data is lost upon program exit (in-memory only).
-* Maximum supported slots: 10,000.
-
----
-
-## 🧩 Extensibility
-
-* New vehicle/slot types can be added by extending classes/enums.
-* The design supports adding persistence or a graphical interface with minimal code changes.
-
----
-
-## 👨‍💻 Key Classes
-
-* **ParkingLot:** Manages all slots and vehicles; singleton pattern.
-* **ParkingSpot:** Represents an individual slot and its state.
-* **Vehicle:** Abstract class; implemented by `SmallCar`, `LargeCar`, `SUV`, `Truck`.
-* **Enums:** For clear, type-safe representation of vehicle and slot types.
-
----
-
-## 🏷️ License
-
-MIT (or specify your license here).
-
----
-
-## 📞 Contact
-
-For questions, contact \[[your-email@example.com](mailto:your-email@example.com)] or open an issue on this repository.
-
----
-
-*This README is ready for submission and professional use!*
